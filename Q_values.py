@@ -9,7 +9,7 @@ from NeuralNet import NeuralNet
 class Q_values:
 
     nn={}
-
+    gamma=0.85
     def __init__(self, layers):
         self.nn = NeuralNet(layers)
 
@@ -17,12 +17,16 @@ class Q_values:
     def q_values(self, input):
         return self.nn.feedforward(input)
 
-    def update_q_func(self, eta, neuron_value, a_agent, R, Q):
-        delta = -(R - Q[a_agent])
+    def update_q_func(self, eta, neuron_value, a_agent, R, Q_s):
+        delta = -(R - Q_s[a_agent])
         delta_v = np.zeros(self.nn.layers[len(self.nn.layers)-1])
         delta_v[a_agent] = delta
-        self.nn.update(eta, neuron_value, delta_v)
+        self.nn.momentum_gradient_decent(eta, delta_v, neuron_value)
 
+    def calculate_next_Q(self,Q_next, next_state):
+        return self.gamma * np.max(Q_next)
+
+    ## not used in Assignment.ipynb
     @staticmethod
     def encode_features(dfK2, s, check):
         s_k1check_onehot = np.array(s == 1).astype(float).reshape(-1)   # FEATURES FOR KING POSITION

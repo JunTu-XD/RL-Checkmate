@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
+from Policy import epsilon_greedy
 from degree_freedom_queen import *
 from degree_freedom_king1 import *
 from degree_freedom_king2 import *
@@ -7,32 +9,6 @@ from generate_game import *
 from Q_values import *
 
 size_board = 4
-
-
-
-# epsilon_greedy
-"""
-          YOUR CODE STARTS HERE
-          
-          FILL THE CODE
-          Implement epsilon greedy policy by using the vector a and a_allowed vector: be careful that the action must
-          be chosen from the a_allowed vector. The index of this action must be remapped to the index of the vector a,
-          containing all the possible actions. Create a vector called a_agent that contains the index of the action 
-          chosen. For instance, if a_allowed = [8, 16, 32] and you select the third action, a_agent=32 not 3.
-          """
-def epsilon_greedy(q_values, allowed_action, epsilon = 0.2):
-
-    rand_a = np.random.uniform(0, 1) < epsilon
-    # random
-    if rand_a == 1:
-        a_agent = np.random.permutation(np.where(allowed_action.flatten()==1)[0])[0]
-    # greedy
-    else:
-        allow_q = np.copy(q_values)
-        allow_q[np.where(allowed_action.flatten()!=1)] = 0
-        a_agent = np.argmax(allow_q)
-    return a_agent
-
 
 # (input, N_h)
 """ Initialization
@@ -47,22 +23,20 @@ def epsilon_greedy(q_values, allowed_action, epsilon = 0.2):
 TODO: Define the w weights between the input and the hidden layer and the w weights between the hidden layer and the
 output layer according to the instructions. Define also the biases.
     """
-
-
-def init_game():
+def main():
     """
-    Generate a new game
-    The function below generates a new chess board with King, Queen and Enemy King pieces randomly assigned so that they
-    do not cause any threats to each other.
-    s: a size_board x size_board matrix filled with zeros and three numbers:
-    1 = location of the King
-    2 = location of the Queen
-    3 = location fo the Enemy King
-    p_k2: 1x2 vector specifying the location of the Enemy King, the first number represents the row and the second
-    number the colunm
-    p_k1: same as p_k2 but for the King
-    p_q1: same as p_k2 but for the Queen
-    """
+   Generate a new game
+   The function below generates a new chess board with King, Queen and Enemy King pieces randomly assigned so that they
+   do not cause any threats to each other.
+   s: a size_board x size_board matrix filled with zeros and three numbers:
+   1 = location of the King
+   2 = location of the Queen
+   3 = location fo the Enemy King
+   p_k2: 1x2 vector specifying the location of the Enemy King, the first number represents the row and the second
+   number the colunm
+   p_k1: same as p_k2 but for the King
+   p_q1: same as p_k2 but for the Queen
+   """
     s, p_k2, p_k1, p_q1 = generate_game(size_board)
 
     """
@@ -100,17 +74,12 @@ def init_game():
     """
     dfK2, a_k2, check = degree_freedom_king2(dfK1, p_k2, dfQ1_, s, p_k1)
 
-    x = Q_values.encode_features(p_q1, p_k1, p_k2, dfK2, s, check)
-    return (x, N_a, possible_queen_a, possible_king_a)
-
-def main():
-    # init
-    (x, N_a, possible_queen_a, possible_king_a) = init_game()
+    x = Q_values.encode_features(dfK2, s, check)
 
     # Neuron Net
     N_in = x.shape[0]
     N_h = 200
-    qv = Q_values(N_in, N_h, N_a)
+    qv = Q_values([N_in, N_h, N_a])
 
     # YOUR CODES ENDS HERE
 
@@ -176,7 +145,7 @@ def main():
             allowed_a = np.where(a > 0)[0]
 
             # Computing Features
-            x = Q_values.encode_features(p_q1, p_k1, p_k2, dfK2, s, check)
+            x = Q_values.encode_features(dfK2, s, check)
 
             Q, neuron_value = qv.q_values(x)
 
@@ -278,7 +247,7 @@ def main():
             # Possible actions of the enemy king
             dfK2, a_k2, check = degree_freedom_king2(dfK1, p_k2, dfQ1_, s, p_k1)
             # Compute features
-            x_next = qv.encode_features(p_q1, p_k1, p_k2, dfK2, s, check)
+            x_next = qv.encode_features(dfK2, s, check)
             # Compute Q-values for the discounted factor
             Q_next, neuron_value= qv.q_values(x_next)
 
@@ -291,4 +260,4 @@ def main():
     return qv
 
 if __name__ == '__main__':
-    main()
+    qv = main()
