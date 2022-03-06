@@ -19,6 +19,6 @@ class sarsa:
         delta_v[a_agent] = delta
         self.nn.momentum_gradient_decent(eta, delta_v, neuron_value)
 
-    def calculate_next_V(self, SV_next, state_next):
-        a_next = epsilon_greedy(SV_next, state_next, self.epsilon)
+    def calculate_next_V(self, SV_next, allowed_next, next_state):
+        a_next = epsilon_greedy(SV_next, allowed_next, self.epsilon)
         return self.gamma * SV_next[a_next]

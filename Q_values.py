@@ -23,24 +23,10 @@ class Q_values:
         delta_v[a_agent] = delta
         self.nn.momentum_gradient_decent(eta, delta_v, neuron_value)
 
-    def calculate_next_Q(self,Q_next, next_state):
-        return self.gamma * np.max(Q_next)
-
-    ## not used in Assignment.ipynb
-    @staticmethod
-    def encode_features(dfK2, s, check):
-        s_k1check_onehot = np.array(s == 1).astype(float).reshape(-1)   # FEATURES FOR KING POSITION
-        s_q1check_onehot = np.array(s == 2).astype(float).reshape(-1)   # FEATURES FOR QUEEN POSITION
-        s_k2check_onehot = np.array(s == 3).astype(float).reshape(-1)   # FEATURE FOR ENEMY'S KING POSITION
-
-        check_onehot=np.zeros([2])    # CHECK? FEATURE
-        check_onehot[check]=1
-
-        K2dof=np.zeros([8])   # NUMBER OF ALLOWED ACTIONS FOR ENEMY'S KING, ONE-HOT ENCODED
-        K2dof[np.sum(dfK2).astype(int)]=1
-
-        # ALL FEATURES...
-        x = np.concatenate([s_k1check_onehot, s_q1check_onehot, s_k2check_onehot, check, K2dof],0)
-
-        return x
-
+    def calculate_next_Q(self,Q_next, allowed_next, next_state):
+        allow_v = np.copy(Q_next)
+        allow_v[np.where(allowed_next.flatten()!=1)] = 0
+        next_action_value = 0
+        if np.max(allow_v) != 0:
+            next_action_value = Q_next[np.argmax(allow_v)]
+        return self.gamma * next_action_value

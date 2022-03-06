@@ -5,22 +5,21 @@ class NeuralNet:
     W_bias = []
     current_neuron_value = []
     layers = []
-    seed = 2
-    momentum = 0.1
+
+    momentum = 0.8
     cached_momentum_change = []
     derivative = []
     def __init__(self, layers):
         self.layers = layers
         self.cached_momentum_change = []
         self.W_bias = self.init_W_bias()
-        self.momentum = 0.1
+        self.momentum = 0.8
         return
 
     ## h = W.T ( N_h, N_pre) * Pre_in(N_pre * 1)
     def init_W_bias(self):
         W_b = []
         for layer_idx in range(len(self.layers)-1):
-            np.random.seed(self.seed)
             W = np.random.uniform(-1, 1, [self.layers[layer_idx], self.layers[layer_idx+1]]) / (self.layers[layer_idx] + self.layers[layer_idx+1])
             b = np.zeros([ self.layers[layer_idx+1]])
             W_b.append((W,b))
