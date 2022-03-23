@@ -106,8 +106,12 @@ class NeuralNet:
 
         return output, neuron_value
 
+    ## gradient decent SGD
     def update(self, eta, neuron_value, delta):
         derivative = self.partial_derivative(self.W_bias, delta, neuron_value)
+        return self.update_weight(eta, derivative, delta)
+
+    def update_weight(self, eta, derivative):
         idx = 0
         for wb in self.W_bias:
             new_w = wb[0] - eta * derivative[idx][0]
@@ -116,8 +120,12 @@ class NeuralNet:
             idx+=1
         return self.W_bias
 
+    ## momentum
     def momentum_gradient_decent(self, eta, delta, neuron_value):
         derivative = self.partial_derivative(self.W_bias, delta, neuron_value)
+        return self.momentum_gradient_decent_update(eta, derivative)
+    
+    def momentum_gradient_decent_update(self, eta, derivative):
         idx = 0
         for wb in self.W_bias:
             w_change = eta * derivative[idx][0] + self.momentum * self.cached_momentum_change[idx][0]
