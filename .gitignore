@@ -23,6 +23,6 @@
 hs_err_pid*
 
 *.pyc
-data_*.py
+*/outdata/*
 plot/*
 model_*.pkl
