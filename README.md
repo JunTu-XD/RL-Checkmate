@@ -5,4 +5,4 @@ For gamma value, 001 means .001; 02 means 0.2, so as 07 040 055; 85 and 99 means
 
 ### all figures 
 All figures of full size are in the path /plot. 
-And the notebook /data/plotting.ipynb containing codes to generate and prese all figures.
+And the notebook /data/plotting.ipynb containing codes to generate and present all figures.
