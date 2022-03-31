@@ -41,8 +41,9 @@ class NeuralNet:
 
     # target: N_a * 1
     # output: N_a * 1
-    # return: [(d_w, d_b, d_a)] i.e d to w, d to bias, d to activation value (not neccessary and used usually)
+    # return: [(d_w, d_b, d_a)] i.e d to w, d to bias, d to activation value (not neccessary and used usually, but just saved in case of needing it)
     # neuron_values: [(input, input), (h,a),(h,a), output]
+    ## all derivative matrix and chain rule are using Jacobian matrix. So some matrix can be sparse.
     def partial_derivative(self, W_bias, delta, neuron_values):
         res = []
         for i in range(len(W_bias)):
