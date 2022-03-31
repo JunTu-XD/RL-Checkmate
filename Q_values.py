@@ -7,7 +7,8 @@ from NeuralNet import NeuralNet
 # network. You can change the input of the function by adding other
 # data, but the input of the function is suggested.
 class Q_values:
-
+    ## default value
+    ## will change outside
     nn={}
     gamma=0.85
     def __init__(self, layers):

@@ -3,6 +3,8 @@ from NeuralNet import NeuralNet
 from Policy import *
 
 class sarsa:
+    ## default value
+    ## will change outside
     nn={}
     gamma=0.85
     epsilon = 0.2
