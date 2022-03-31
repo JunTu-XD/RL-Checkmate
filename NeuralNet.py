@@ -6,7 +6,7 @@ class NeuralNet:
     current_neuron_value = []
     layers = []
 
-    momentum = 0.8
+    momentum = 0.7
     cached_momentum_change = []
     derivative = []
     def __init__(self, layers):
@@ -41,7 +41,7 @@ class NeuralNet:
 
     # target: N_a * 1
     # output: N_a * 1
-    # return: [(d_w, d_b, d_a)]
+    # return: [(d_w, d_b, d_a)] i.e d to w, d to bias, d to activation value (not neccessary and used usually)
     # neuron_values: [(input, input), (h,a),(h,a), output]
     def partial_derivative(self, W_bias, delta, neuron_values):
         res = []
@@ -54,6 +54,10 @@ class NeuralNet:
 
         d_y_d_a_prev = d_q_loss_d_a
         d_y_d_a_prev = np.reshape(d_y_d_a_prev, (d_y_d_a_prev.shape[0], 1)).transpose()
+        ## chain rule and back prop
+        ## a is activation 
+        ## h is hidden layer
+        ## d_*/d_** is partical derivative of * with respect to **
         for i in range(0, len(W_bias)):
             w_idx = len(W_bias) - i - 1
             (w, b) = W_bias[w_idx]
@@ -92,7 +96,7 @@ class NeuralNet:
         prev = np.asarray(input)
         neuron_value.append((prev, prev))
         W_bias = self.W_bias
-
+        ## feed forward by matrix multiplication
         for (w, bias) in W_bias:
             # vector.dot w => vector
             h = prev.dot(np.asarray(w))
