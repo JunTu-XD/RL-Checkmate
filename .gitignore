@@ -23,5 +23,5 @@
 hs_err_pid*
 
 *.pyc
+*__pycache__*
 */outdata/*
-plot/*
