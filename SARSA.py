@@ -21,7 +21,8 @@ class sarsa:
     # SV_s: state value calculated by function
     def update_sarsa_func(self, eta, neuron_value, a_agent, R, SV_s):
         ## when put into gradient decent, 
-        ## W - eta * derivatives equals W + eta * (-delta) * other partial_derivatives (chain rule)
+        ## W - eta * derivatives in gradient descent equals W + eta * (-delta) * other partial_derivatives (chain rule)
+        ## - delta is equal to what is in Formula
         delta = -(R - SV_s[a_agent])
         ## only update parts associated with the action
         delta_v = np.zeros(self.nn.layers[len(self.nn.layers)-1])
